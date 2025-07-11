@@ -865,6 +865,57 @@ def generate_all_minimal_regions_o(k: int, transition_system: SATransitionSystem
     return minimal_regions, explored_multisets, iterations
 
 
+def generate_all_regions_v1(k: int, transition_system: SATransitionSystem):
+    ts = transition_system
+    int_k = k
+    
+    discovered_regions = []     # R
+    explored_multisets = []     # M
+    
+    candidates = get_candidates(transition_system=ts)    # P
+
+    # remove duplicates
+    # candidates = __remove_duplicates(list_of_multisets=candidates)
+
+    # # remove supersets
+    # candidates = __remove_supersets(list_of_multisets=candidates)
+    
+    iterations = 0
+    
+    while candidates:
+        print("****************")
+        print(f"Iteration: {iterations}")
+        # print(f"Num Candidates: {len(candidates)}")
+        
+        l_candidates = [list(c.values()) for c in candidates]
+        idx = min(range(len(l_candidates)), key=lambda i: sum(l_candidates[i]))
+        
+        r_tilde = candidates.pop(idx)
+        # print(f"candidate: {list(r_tilde.values())}")
+        
+        if is_region(multiset=r_tilde, transition_system=ts):
+            if not r_tilde in discovered_regions:
+                print("Candidate is a region, add to the list.")
+                discovered_regions.append(r_tilde)
+                explored_multisets.append(r_tilde)
+                
+                iterations = iterations + 1
+            else:
+                print("Candidate is a region, already exists.")
+                iterations = iterations + 1
+        else:
+            discovered_regions, explored_multisets, niter = multiset_expansion(k=int_k, multiset=r_tilde, niter=iterations, discovered_minimal_regions=discovered_regions, explored_multisets=explored_multisets, transition_system=ts)
+            
+            print(f"len l_r: {len(discovered_regions)}")
+            print(f"len l_m: {len(explored_multisets)}")
+            print(f"niter: {niter}")
+
+            iterations = niter
+    print(f"Number of Discovered Regions: {len(discovered_regions)}")
+    # pprint(f"Discovered Regions: {discovered_regions}")
+    return discovered_regions
+
+
 def generate_all_minimal_regions_v1(k: int, transition_system: SATransitionSystem):
     """
     Generates all minimal regions for a given transition system.

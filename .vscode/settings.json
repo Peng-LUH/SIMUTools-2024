@@ -1,0 +1,7 @@
+{
+    "python.terminal.activateEnvironment": false,
+    "python.analysis.extraPaths": [
+        "./sapn/objects",
+        "./sapn/regions"
+    ],
+}

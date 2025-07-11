@@ -3,6 +3,8 @@ from Transition import Transition
 from Arc import Arc
 import xml.etree.ElementTree as ET
 
+from pm4py.objects.petri_net.obj import Marking, Place
+
 class StructuralAdaptivePN:
     def __init__(self):
         self.places = {}
@@ -11,7 +13,7 @@ class StructuralAdaptivePN:
     def add_place(self, place_id, tokens=0):
         if place_id not in self.places:
             self.places[place_id] = Place(place_id, tokens)
-
+    
     def add_transition(self, transition_id, input_place_ids=None, output_place_ids=None):
         input_places = [self.places[pid] for pid in input_place_ids] if input_place_ids else []
         output_places = [self.places[pid] for pid in output_place_ids] if output_place_ids else []
